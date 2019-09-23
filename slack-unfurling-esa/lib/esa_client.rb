@@ -3,7 +3,8 @@
 require 'esa'
 
 class EsaClient
-  POST_URL_PATTERN = /\Ahttps:\/\/([\w-]+)\.esa\.io\/posts\/(\d+)(\/.*)?\z/.freeze
+  POST_URL_PATTERN = /\Ahttps:\/\/([\w-]+)\.esa\.io\/posts\/(\d+)(.*)?\z/.freeze
+  ESA_COLOR = '#3E8E89'
 
   def initialize
     @client = Esa::Client.new(access_token: ENV['ESA_ACCESS_TOKEN'])
@@ -22,16 +23,30 @@ class EsaClient
 
     begin
       @client.current_team = $1
-      post = @client.post($2.to_i).body
+      post = @client.post($2.to_i, include: :comments).body
 
-      info = {
-        title: post['full_name'],
-        title_link: post['url'],
-        author_name: post['updated_by']['screen_name'],
-        author_icon: post['updated_by']['icon'],
-        text: post['body_md'].lines[0, 10].map { |item| item.chomp }.join("\n"),
-        color: '#3E8E89'
-      }
+      if $3 =~ /#comment-(\d+)/
+        comment = post['comments'].find { |c| c['id'] == $1.to_i }
+        return nil unless comment
+
+        info = {
+          title: post['full_name'],
+          title_link: comment['url'],
+          author_name: comment['created_by']['screen_name'],
+          author_icon: comment['created_by']['icon'],
+          text: truncate(comment['body_md']),
+          color: ESA_COLOR
+        }
+      else
+        info = {
+          title: post['full_name'],
+          title_link: post['url'],
+          author_name: post['updated_by']['screen_name'],
+          author_icon: post['updated_by']['icon'],
+          text: truncate(post['body_md']),
+          color: ESA_COLOR
+        }
+      end
 
       return info
     rescue => e
@@ -40,4 +55,9 @@ class EsaClient
     end
   end
 
+  private
+
+  def truncate(body)
+    body.lines[0, 10].map { |item| item.chomp }.join("\n")
+  end
 end
