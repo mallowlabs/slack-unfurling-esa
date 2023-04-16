@@ -61,7 +61,7 @@ class AppTest < Minitest::Test
           icon: 'icon'
         },
         body_md: 'body_md'
-      }.to_json, headers: {})
+      }.to_json, headers: {'content-type': 'application/json'})
 
     stub_request(:post, 'https://slack.com/api/chat.unfurl').
     with(
@@ -79,7 +79,7 @@ class AppTest < Minitest::Test
           }
         }
       }.to_json).
-      to_return(status: 200, body: "", headers: {})
+      to_return(status: 200, body: "", headers: {'content-type': 'application/json'})
 
     expected_result = { statusCode: 200, body: JSON.generate(ok: true) }
 
@@ -114,7 +114,7 @@ class AppTest < Minitest::Test
             body_md: 'comment_body_md'
           }
         ]
-      }.to_json, headers: {})
+      }.to_json, headers: {'content-type': 'application/json'})
 
     stub_request(:post, 'https://slack.com/api/chat.unfurl').
     with(
@@ -132,7 +132,7 @@ class AppTest < Minitest::Test
           }
         }
       }.to_json).
-      to_return(status: 200, body: "", headers: {})
+      to_return(status: 200, body: "", headers: {'content-type': 'application/json'})
 
     expected_result = { statusCode: 200, body: JSON.generate(ok: true) }
 
