@@ -32,7 +32,7 @@ GEM
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
     mime-types-data (3.2025.0924)
-    minitest (6.0.0)
+    minitest (6.0.1)
       prism (~> 1.5)
     minitest-mock (5.27.0)
     multi_xml (0.7.2)
