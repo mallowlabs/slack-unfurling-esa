@@ -22,7 +22,7 @@ Resources:
         Properties:
             CodeUri: slack-unfurling-esa/
             Handler: app.lambda_handler
-            Runtime: ruby3.4
+            Runtime: ruby4.0
             Environment:
                 Variables:
                     ESA_ACCESS_TOKEN: !Ref EsaAccessToken
